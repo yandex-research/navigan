@@ -16,6 +16,10 @@ def to_image(tensor, adaptive=False):
         return ToPILImage()((255 * tensor.cpu().detach()).to(torch.uint8))
 
 
+def to_image_grid(tensor, adaptive=False, **kwargs):
+    return to_image(make_grid(tensor, **kwargs), adaptive)
+
+
 class SamplesGrid(object):
     def __init__(self, dataset_dir, size):
         self.dataset_dir = dataset_dir

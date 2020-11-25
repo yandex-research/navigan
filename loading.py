@@ -9,7 +9,7 @@ from latent_shift_predictor import LatentShiftPredictor, LeNetShiftPredictor
 from constants import WEIGHTS
 
 
-def load_generator(args, G_weights, shift_in_w):
+def load_generator(args, G_weights, shift_in_w=False):
     gan_type = args['gan_type']
     if gan_type == 'BigGAN':
         G = make_big_gan(G_weights, args['target_class']).eval()

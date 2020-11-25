@@ -117,21 +117,23 @@ class Trainer(object):
             fig_to_image(fig).convert("RGB").save(
                 os.path.join(self.images_dir, '{}_{}.jpg'.format(prefix, step)))
 
-    def start_from_checkpoint(self, deformator, shift_predictor):
+    def start_from_checkpoint(self, G, deformator, shift_predictor):
         step = 0
         if os.path.isfile(self.checkpoint):
             state_dict = torch.load(self.checkpoint)
             step = state_dict['step']
             deformator.load_state_dict(state_dict['deformator'])
             shift_predictor.load_state_dict(state_dict['shift_predictor'])
+            G.load_state_dict(state_dict['generator'])
             print('starting from step {}'.format(step))
         return step
 
-    def save_checkpoint(self, deformator, shift_predictor, step):
+    def save_checkpoint(self, G, deformator, shift_predictor, step):
         state_dict = {
             'step': step,
             'deformator': deformator.state_dict(),
             'shift_predictor': shift_predictor.state_dict(),
+            'generator': G.state_dict(),
         }
         torch.save(state_dict, self.checkpoint)
 
@@ -152,17 +154,18 @@ class Trainer(object):
         shift_predictor.train()
         return accuracy
 
-    def log(self, G, deformator, shift_predictor, step, avgs):
+    def log(self, G, deformator, shift_predictor, step, avgs, is_latent):
         if step % self.p.steps_per_log == 0:
             self.log_train(step, True, [avg.flush() for avg in avgs])
 
-        if step % self.p.steps_per_img_log == 0:
+        if is_latent and step % self.p.steps_per_img_log == 0:
             self.log_interpolation(G, deformator, step)
 
         if step % self.p.steps_per_backup == 0 and step > 0:
-            self.save_checkpoint(deformator, shift_predictor, step)
-            accuracy = self.log_accuracy(G, deformator, shift_predictor, step)
-            print('Step {} accuracy: {:.3}'.format(step, accuracy.item()))
+            self.save_checkpoint(G, deformator, shift_predictor, step)
+            if is_latent:
+                accuracy = self.log_accuracy(G, deformator, shift_predictor, step)
+                print('Step {} accuracy: {:.3}'.format(step, accuracy.item()))
 
         if step % self.p.steps_per_save == 0 and step > 0:
             self.save_models(deformator, shift_predictor, step)
@@ -185,26 +188,43 @@ class Trainer(object):
                MeanTracker('shift_loss')
         avg_correct_percent, avg_loss, avg_label_loss, avg_shift_loss = avgs
 
-        recovered_step = self.start_from_checkpoint(deformator, shift_predictor)
+        recovered_step = self.start_from_checkpoint(G, deformator, shift_predictor)
         for step in range(recovered_step, self.p.n_steps, 1):
             G.zero_grad()
             deformator.zero_grad()
             shift_predictor.zero_grad()
 
             z = make_noise(self.p.batch_size, G.dim_z, self.p.truncation).cuda()
-            target_indices, shifts, basis_shift = self.make_shifts(deformator.input_dim)
+            if self.p.deformator_target == 'latent':
+                target_indices, shifts, basis_shift = self.make_shifts(deformator.input_dim)
+            else:
+                target_indices, shifts, basis_shift = self.make_shifts(G.dim_z)
 
             if should_gen_classes:
                 classes = G.mixed_classes(z.shape[0])
 
             # Deformation
-            shift = deformator(basis_shift)
-            if should_gen_classes:
-                imgs = G(z, classes)
-                imgs_shifted = G.gen_shifted(z, shift, classes)
+            if self.p.deformator_target == 'latent':
+                shift = deformator(basis_shift)
+
+            if should_gen_classes:         
+                if self.p.deformator_target == 'latent':
+                    imgs = G(z, classes)
+                    imgs_shifted = G.gen_shifted(z, shift, classes)
+                elif self.p.deformator_target.startswith('weight'):
+                    imgs = G(z, classes)
+                    deformator.deformate(target_indices, shifts)
+                    imgs_shifted = G(z, classes)
+                    deformator.disable_deformation()
             else:
-                imgs = G(z)
-                imgs_shifted = G.gen_shifted(z, shift)
+                if self.p.deformator_target == 'latent':
+                    imgs = G(z)
+                    imgs_shifted = G.gen_shifted(z, shift)
+                elif self.p.deformator_target.startswith('weight'):
+                    imgs = G(z)
+                    deformator.deformate(target_indices, shifts)
+                    imgs_shifted = G(z)
+                    deformator.disable_deformation()
 
             logits, shift_prediction = shift_predictor(imgs, imgs_shifted)
             logit_loss = self.p.label_weight * self.cross_entropy(logits, target_indices)
@@ -225,7 +245,9 @@ class Trainer(object):
             avg_label_loss.add(logit_loss.item())
             avg_shift_loss.add(shift_loss)
 
-            self.log(G, deformator, shift_predictor, step, avgs)
+            self.log(
+                G, deformator, shift_predictor, step, avgs,
+                is_latent=self.p.deformator_target == 'latent')
 
 
 @torch.no_grad()

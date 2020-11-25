@@ -5,3 +5,5 @@ matplotlib==3.0.3
 tqdm==4.32.1
 Pillow==7.0.0
 tensorboardX==2.0
+lpips==0.1.3
+moviepy==0.1.3

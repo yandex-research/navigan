@@ -1,5 +1,13 @@
+from enum import Enum
+
 from latent_deformator import DeformatorType
 from trainer import ShiftDistribution
+
+
+class DeformatorTarget(Enum):
+    LATENT = 1
+    WEIGHT_SVD = 2
+    WEIGHT_FIXEDBASIS = 3
 
 
 HUMAN_ANNOTATION_FILE = 'human_annotation.txt'
@@ -12,6 +20,13 @@ DEFORMATOR_TYPE_DICT = {
     'ortho': DeformatorType.ORTHO,
     'proj': DeformatorType.PROJECTIVE,
     'random': DeformatorType.RANDOM,
+}
+
+
+DEFORMATOR_TARGET_DICT = {
+    'latent': DeformatorTarget.LATENT,
+    'weight_svd': DeformatorTarget.WEIGHT_SVD,
+    'weight_fixedbasis': DeformatorTarget.WEIGHT_FIXEDBASIS
 }
 
 
