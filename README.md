@@ -1,6 +1,6 @@
 # Navigating the GAN Parameter Space for Semantic Image Editing
 
-Authors official implementation of the [_Navigating the GAN Parameter Space for Semantic Image Editing [TODO]_](https://arxiv.org/abs/???) by Anton Cherepkov, Andrey Voynov, and Artem Babenko.
+Authors official implementation of the _Navigating the GAN Parameter Space for Semantic Image Editing_ by Anton Cherepkov, Andrey Voynov, and Artem Babenko.
 
 __Main steps of our approach__:
 * _First_: we form a low-dimensional subspace in the parameters space of a pretrained GAN;
