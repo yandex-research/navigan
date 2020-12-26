@@ -39,7 +39,21 @@ _Thickness_
 
 ![An image](./images/original_car.jpg) ![An image](./images/car_wheel_real.gif) ![An image](./images/car_rot_real.gif)
 
+#### Pix2PixHD
 
+The proposed method is also applicable to pixel-to-pixel models.
+Here we present some of the effects discovered for the [label-to-streetview](https://github.com/NVIDIA/pix2pixHD) model.
+
+![Alt Text](https://www.dropbox.com/s/wun3nc9hgmqeljd/add_curb.gif)
+<sub>Add curb</sub>\
+
+![Alt Text](https://www.dropbox.com/s/j68zz06736qp9jv/dark_road.gif)
+<sub>Road darkening</sub>\
+
+check high-res videos here: [curb1](https://www.dropbox.com/s/3nzxx5cafxmyhxh/add_curb.mp4),
+[curb2](https://www.dropbox.com/s/a5ccbcxvtodc89g/add_curb_2.mp4),
+[darkening1](https://www.dropbox.com/s/atr4xailywaibht/dark_road.mp4),
+[darkening2](https://www.dropbox.com/s/7j9gxofksjzhp67/dark_road_2.mp4)
 
 ---
 
