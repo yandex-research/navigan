@@ -44,11 +44,11 @@ _Thickness_
 The proposed method is also applicable to pixel-to-pixel models.
 Here we present some of the effects discovered for the [label-to-streetview](https://github.com/NVIDIA/pix2pixHD) model.
 
-![Alt Text](./images/add_curb.gif)
-<sub>Add curb</sub>\
+![Alt Text](./images/add_curb.gif)\
+_Add curb_
 
-![Alt Text](./images/road_darkening.gif)
-<sub>Road darkening</sub>\
+![Alt Text](./images/road_darkening.gif)\
+_Road darkening_
 
 check high-res videos here: [curb1](https://www.dropbox.com/s/3nzxx5cafxmyhxh/add_curb.mp4),
 [curb2](https://www.dropbox.com/s/a5ccbcxvtodc89g/add_curb_2.mp4),
