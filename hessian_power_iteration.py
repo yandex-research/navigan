@@ -8,7 +8,7 @@ from tqdm.auto import tqdm
 
 from weight_deformator import get_conv_from_generator
 from copy import deepcopy
-from gans import gan_load
+from loading import load_generator
 import lpips
 
 from videos import make_video
@@ -179,11 +179,7 @@ def generate_videos(args, eigenvectors):
         os.mkdir(clips_dir)
 
     if args.samples_for_videos is None:
-        dim_z = gan_load.load_generator(
-            gan_load.GANType.StyleGAN2,
-            resolution=args.resolution,
-            weights=args.gan_weights
-        ).dim_z
+        dim_z = load_generator(args.__dict__, args.gan_weights).dim_z
         zs = torch.randn((4, dim_z)).cuda()
     else:
         zs = torch.load(args.samples_for_videos).cuda()
@@ -193,11 +189,7 @@ def generate_videos(args, eigenvectors):
         eigenvector = eigenvector.cuda()
 
         for amplitude in [10, 50, 100, 200, 500]:
-            generator = gan_load.load_generator(
-                gan_load.GANType.StyleGAN2,
-                resolution=args.resolution,
-                weights=args.gan_weights
-            )
+            generator = load_generator(args.__dict__, args.gan_weights)
 
             wd = ConstantWeightDeformator(
                 generator=generator,
@@ -221,6 +213,7 @@ def generate_videos(args, eigenvectors):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('--gan_type', type=str, default='StyleGAN2')
     parser.add_argument('--gan_weights', type=str, required=True)
     parser.add_argument('--resolution', type=int, required=True)
     parser.add_argument('--gan_conv_layer_index', type=int, required=True)
@@ -243,11 +236,7 @@ if __name__ == "__main__":
 
     lpips_model = lpips.LPIPS(net=args.lpips_net).cuda()
 
-    generator = gan_load.load_generator(
-        gan_load.GANType.StyleGAN2,
-        resolution=args.resolution,
-        weights=args.gan_weights
-    )
+    generator = load_generator(args.__dict__, args.gan_weights)
 
     hvp = HVP_forward(
         generator=generator,
