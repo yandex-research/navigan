@@ -2,6 +2,8 @@
 
 Authors official implementation of the CVPR'2021 paper [_Navigating the GAN Parameter Space for Semantic Image Editing_](https://arxiv.org/abs/2011.13786) by Anton Cherepkov, Andrey Voynov, and Artem Babenko.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/15aanLPN6_T2SHp0oQh3stIuESSfpNGuv?usp=sharing)
+
 __Main steps of our approach__:
 ![An image](./images/scheme.png)
 * _First_: we form a low-dimensional subspace in the parameters space of a pretrained GAN;
