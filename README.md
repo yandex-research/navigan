@@ -241,6 +241,19 @@ You can find loading and deformation example at ```example.ipynb```
 
 ----
 
+## Citation
+
+```shell
+@inproceedings{Navigan_CVPR_2021,
+  title     = {Navigating the GAN Parameter Space for Semantic Image Editing},
+  author    = {Cherepkov, Anton and Voynov, Andrey and Babenko, Artem},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year = {2021}
+}
+```
+
+----
+
 ## Credits
 Our code is based on the _Unsupervised Discovery of Interpretable Directions in the GAN Latent Space_ official implementation \
 https://github.com/anvoynov/GANLatentDiscovery \
