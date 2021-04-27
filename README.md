@@ -243,7 +243,7 @@ You can find loading and deformation example at ```example.ipynb```
 
 ## Citation
 
-```shell
+```
 @inproceedings{Navigan_CVPR_2021,
   title     = {Navigating the GAN Parameter Space for Semantic Image Editing},
   author    = {Cherepkov, Anton and Voynov, Andrey and Babenko, Artem},
