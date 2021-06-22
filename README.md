@@ -244,11 +244,13 @@ You can find loading and deformation example at ```example.ipynb```
 ## Citation
 
 ```
-@inproceedings{Navigan_CVPR_2021,
-  title     = {Navigating the GAN Parameter Space for Semantic Image Editing},
-  author    = {Cherepkov, Anton and Voynov, Andrey and Babenko, Artem},
-  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year = {2021}
+@InProceedings{Navigan_CVPR_2021,
+    author    = {Cherepkov, Anton and Voynov, Andrey and Babenko, Artem},
+    title     = {Navigating the GAN Parameter Space for Semantic Image Editing},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2021},
+    pages     = {3671-3680}
 }
 ```
 
